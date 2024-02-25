@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   title: z.string().min(1, {
@@ -39,17 +40,16 @@ const CreateSubjectPage = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       console.log(values);
-      const res = await fetch("/api/subject", {
+      const response = await fetch("/api/subjects", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
-
-      //const response = await axios.post("/api/courses", values);
-      //router.push(`/teacher/courses/${response.data.id}`);
-      //toast.success("Course created");
+      const data = await response.json();
+      router.push(`/subject/${data.id}`);
+      toast.success('The subject has been created.');
     } catch {
-      //toast.error("Something went wrong");
+      toast.error("Something went wrong.");
     }
   };
 
